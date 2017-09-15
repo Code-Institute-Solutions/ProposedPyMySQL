@@ -1,17 +1,23 @@
+#!/usr/bin/env python
+import os
 import pymysql
 
+# Get the username from the Cloud9 workspace
+# (modify this variable if running on another environment)
+username = os.getenv('C9_USER')
+
+# Connect to the database
 connection = pymysql.connect(host='localhost',
-                             user='richardadalton',
+                             user=username,
                              password='',
                              db='Chinook')
 try:
     with connection.cursor() as cursor:
-        data = [
-                (23, 'bob'),
+        rows = [(23, 'bob'),
                 (24, 'jim'),
-                (25, 'fred')
-            ]
-        rows = cursor.executemany("update friends set age = %s where name = %s", data)
+                (25, 'fred')]
+        cursor.executemany("UPDATE Friends SET age = %s WHERE name = %s;",
+                           rows)
         connection.commit()
 finally:
     connection.close()
